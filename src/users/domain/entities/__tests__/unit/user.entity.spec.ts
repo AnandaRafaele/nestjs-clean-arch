@@ -23,6 +23,11 @@ describe('UserEntity unit tests', () => {
     expect(typeof sut.name).toBe('string');
   });
 
+  it('should update a user name', () => {
+    sut.updateName('new name');
+    expect(sut.props.name).toBe('new name');
+  });
+
   it('should return a user email', () => {
     expect(sut.email).toBeDefined();
     expect(sut.email).toBe(props.email);
@@ -33,6 +38,11 @@ describe('UserEntity unit tests', () => {
     expect(sut.password).toBeDefined();
     expect(sut.password).toBe(props.password);
     expect(typeof sut.password).toBe('string');
+  });
+
+  it('should update a user password', () => {
+    sut.updatePassword('new password');
+    expect(sut.props.password).toBe('new password');
   });
 
   it('should return a user createdAt', () => {
