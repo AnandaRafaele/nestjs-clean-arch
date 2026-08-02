@@ -1,4 +1,4 @@
-import { validateSync as classValidateSync } from 'class-validator';
+import * as classValidatorImport from 'class-validator';
 import { FieldsErrors, FieldsValidatorInterface } from './fields-validator';
 
 type ValidationError = {
@@ -6,9 +6,11 @@ type ValidationError = {
   constraints?: Record<string, string>;
 };
 
-const validateSync = classValidateSync as unknown as (
-  object: object,
-) => ValidationError[];
+type ClassValidatorModule = {
+  validateSync: (object: object) => ValidationError[];
+};
+
+const classValidator = classValidatorImport as unknown as ClassValidatorModule;
 
 export abstract class ClassValidatorFields<
   PropsValidated,
@@ -17,7 +19,7 @@ export abstract class ClassValidatorFields<
   validatedData: PropsValidated | null = null;
 
   validate(data: object): boolean {
-    const errors = validateSync(data);
+    const errors = classValidator.validateSync(data);
 
     if (errors.length) {
       this.errors = {};

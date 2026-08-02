@@ -1,5 +1,5 @@
 import { validate as validateUuid } from 'uuid';
-import { Entity } from '../entity';
+import { Entity } from '../../entity';
 
 type StubEntityProps = {
   prop1: string;
