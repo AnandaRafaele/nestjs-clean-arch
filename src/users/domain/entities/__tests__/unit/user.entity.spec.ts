@@ -7,13 +7,24 @@ import { userDataBuilder } from '@/users/domain/testing/helpers/user-data-builde
 describe('UserEntity unit tests', () => {
   let props: UserEntityProps;
   let sut: UserEntity;
+  let validateSpy: jest.SpyInstance;
 
   beforeEach(() => {
+    // Substitui UserEntity.validate por um mock (não roda a validação real)
+    validateSpy = jest
+      .spyOn(UserEntity, 'validate')
+      .mockImplementation(() => undefined);
     props = userDataBuilder();
-    sut = new UserEntity(props);
+    sut = new UserEntity(props); // já chama validate 1x no construtor
   });
 
-  it('should create a user', () => {
+  afterEach(() => {
+    // Remove o spy e restaura o método original da classe
+    validateSpy.mockRestore();
+  });
+
+  it('should construct a user (constructor)', () => {
+    expect(validateSpy).toHaveBeenCalledTimes(1);
     expect(sut.props.name).toBe(props.name);
     expect(sut.props.email).toBe(props.email);
     expect(sut.props.password).toBe(props.password);
@@ -27,7 +38,10 @@ describe('UserEntity unit tests', () => {
   });
 
   it('should update a user name', () => {
+    // Zera o histórico de chamadas (ignora a do construtor)
+    validateSpy.mockClear();
     sut.updateName('new name');
+    expect(validateSpy).toHaveBeenCalledTimes(1);
     expect(sut.props.name).toBe('new name');
   });
 
@@ -44,7 +58,10 @@ describe('UserEntity unit tests', () => {
   });
 
   it('should update a user password', () => {
+    // Zera o histórico de chamadas (ignora a do construtor)
+    validateSpy.mockClear();
     sut.updatePassword('new password');
+    expect(validateSpy).toHaveBeenCalledTimes(1);
     expect(sut.props.password).toBe('new password');
   });
 
