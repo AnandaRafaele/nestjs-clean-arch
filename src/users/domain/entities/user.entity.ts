@@ -1,4 +1,5 @@
-import { Entity } from '../../../shared/domain/entities/entity';
+import { Entity } from '@/shared/domain/entities/entity';
+import { UserValidatorFactory } from '../validators/user.validator';
 
 export interface UserEntityProps {
   name: string;
@@ -12,15 +13,18 @@ export class UserEntity extends Entity<UserEntityProps> {
     public readonly props: UserEntityProps,
     id?: string,
   ) {
+    UserEntity.validate(props);
     super(props, id);
     this.props.createdAt = this.props.createdAt ?? new Date();
   }
 
   updateName(value: string) {
+    UserEntity.validate({ ...this.props, name: value });
     this.name = value;
   }
 
   updatePassword(value: string) {
+    UserEntity.validate({ ...this.props, password: value });
     this.password = value;
   }
 
@@ -46,5 +50,13 @@ export class UserEntity extends Entity<UserEntityProps> {
 
   get createdAt() {
     return this.props.createdAt;
+  }
+
+  static validate(props: UserEntityProps): void {
+    const validator = UserValidatorFactory.create();
+    const isValid = validator.validate(props);
+    if (!isValid) {
+      throw new Error(JSON.stringify(validator.errors));
+    }
   }
 }

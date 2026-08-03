@@ -1,6 +1,6 @@
+import { EnvConfigModule } from '@/shared/infrastructure/env-config/env-config.module';
+import { EnvConfigService } from '@/shared/infrastructure/env-config/env-config.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { EnvConfigModule } from '../../env-config.module';
-import { EnvConfigService } from '../../env-config.service';
 
 describe('EnvConfigService unit tests', () => {
   // SUT (System Under Test)
