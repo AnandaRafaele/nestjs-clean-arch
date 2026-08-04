@@ -1,32 +1,32 @@
-import { ConflictError } from '../../../../../shared/domain/errors/conflict-error';
-import { NotFoundError } from '../../../../../shared/domain/errors/not-found-error';
-import { InMemoryRepository } from '../../../../../shared/domain/repositories/in-memory.repository';
-import { UserEntity } from '../../../../domain/entities/user.entity';
-import { UserRepositoryInterface } from '../../../../domain/repositories/user-repository';
+import { ConflictError } from '@/shared/domain/errors/conflict-error';
+import { NotFoundError } from '@/shared/domain/errors/not-found-error';
+import { InMemorySearchableRepository } from '@/shared/domain/repositories/in-memory-searchable.repository';
+import { UserEntity } from '@/users/domain/entities/user.entity';
+import { UserRepositoryInterface } from '@/users/domain/repositories/user-repository';
 
-export class UserInMemory
-  extends InMemoryRepository<UserEntity>
+export class UserInMemoryRepository
+  extends InMemorySearchableRepository<UserEntity>
   implements UserRepositoryInterface
 {
-  async findByEmail(email: string): Promise<UserEntity> {
-    const user = await this._findUserByEmail(email);
+  findByEmail(email: string): Promise<UserEntity> {
+    const user = this._findUserByEmail(email);
     if (!user) {
-      throw new NotFoundError(`User with email ${email} not found`);
+      return Promise.reject(
+        new NotFoundError(`User with email ${email} not found`),
+      );
     }
-    return user;
-  }
-
-  async emailExists(email: string): Promise<void> {
-    const user = await this._findUserByEmail(email);
-    if (user) {
-      throw new ConflictError('User email already exists');
-    }
-  }
-
-  protected async _findUserByEmail(
-    email: string,
-  ): Promise<UserEntity | undefined> {
-    const user = this.items.find(item => item.email === email);
     return Promise.resolve(user);
+  }
+
+  emailExists(email: string): Promise<void> {
+    const user = this._findUserByEmail(email);
+    if (user) {
+      return Promise.reject(new ConflictError('User email already exists'));
+    }
+    return Promise.resolve();
+  }
+
+  protected _findUserByEmail(email: string): UserEntity | undefined {
+    return this.items.find((item: UserEntity) => item.email === email);
   }
 }
