@@ -2,9 +2,7 @@ import { Entity } from '@/shared/domain/entities/entity';
 import { NotFoundError } from '@/shared/domain/errors/not-found-error';
 import { RepositoryInterface } from './repository-contracts';
 
-export abstract class InMemoryRepository<
-  E extends Entity,
-> implements RepositoryInterface<E> {
+export abstract class InMemoryRepository<E extends Entity> implements RepositoryInterface<E> {
   items: E[] = [];
 
   insert(entity: E): Promise<void> {
@@ -35,9 +33,7 @@ export abstract class InMemoryRepository<
   protected _get(id: string): Promise<E> {
     const entity = this.items.find(item => item.id === id);
     if (!entity) {
-      return Promise.reject(
-        new NotFoundError(`Entity not found using ID ${id}`),
-      );
+      return Promise.reject(new NotFoundError(`Entity not found using ID ${id}`));
     }
     return Promise.resolve(entity);
   }
