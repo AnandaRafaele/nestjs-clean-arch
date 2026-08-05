@@ -79,6 +79,9 @@ export class SearchParams<Filter = string> {
   }
 
   private isEmpty(value: unknown): boolean {
+    if (typeof value === 'boolean') {
+      return true;
+    }
     return value === null || value === undefined || value === '';
   }
 
