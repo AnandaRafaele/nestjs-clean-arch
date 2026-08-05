@@ -1,4 +1,16 @@
-import { SearchParams, SearchProps, SortDirectionEnum } from '../../seachable-repository-contracts';
+import { Entity } from '@/shared/domain/entities/entity';
+import {
+  SearchParams,
+  SearchProps,
+  SearchResult,
+  SortDirectionEnum,
+} from '@/shared/domain/repositories/seachable-repository-contracts';
+
+type StubEntityProps = {
+  name: string;
+};
+
+class StubEntity extends Entity<StubEntityProps> {}
 
 type PageTestCase = {
   page: unknown;
@@ -24,6 +36,12 @@ type SortDirTestCase = {
 type FilterTestCase = {
   filter: unknown;
   expected: unknown;
+};
+
+type LastPageTestCase = {
+  total: number;
+  perPage: number;
+  expected: number;
 };
 
 describe('SearchableRepositoryContracts unit tests', () => {
@@ -81,12 +99,10 @@ describe('SearchableRepositoryContracts unit tests', () => {
     });
 
     it.each<SortDirTestCase>([
-      // sem sort → sortDir sempre null
       { sortDir: null, expected: null },
       { sortDir: undefined, expected: null },
       { sortDir: 'asc', expected: null },
       { sortDir: 'desc', expected: null },
-      // com sort → normaliza direção
       { sort: 'name', sortDir: null, expected: SortDirectionEnum.DESC },
       { sort: 'name', sortDir: undefined, expected: SortDirectionEnum.DESC },
       { sort: 'name', sortDir: '', expected: SortDirectionEnum.DESC },
@@ -122,6 +138,97 @@ describe('SearchableRepositoryContracts unit tests', () => {
       expect(params.sort).toBeNull();
       expect(params.sortDir).toBeNull();
       expect(params.filter).toBeNull();
+    });
+  });
+
+  describe('SearchResult tests', () => {
+    it('should construct SearchResult and serialize with toJSON', () => {
+      const entity1 = new StubEntity({ name: 'teste1' }, '1');
+      const entity2 = new StubEntity({ name: 'teste2' }, '2');
+      const entity3 = new StubEntity({ name: 'teste3' }, '3');
+      const entity4 = new StubEntity({ name: 'teste4' }, '4');
+
+      const sut = new SearchResult({
+        items: [entity1, entity2, entity3, entity4],
+        total: 4,
+        currentPage: 1,
+        perPage: 2,
+        sort: null,
+        sortDir: null,
+        filter: null,
+      });
+
+      expect(sut.toJSON()).toStrictEqual({
+        items: [entity1, entity2, entity3, entity4],
+        total: 4,
+        currentPage: 1,
+        perPage: 2,
+        lastPage: 2,
+        sort: null,
+        sortDir: null,
+        filter: null,
+      });
+    });
+
+    it('should default optional props to null when omitted', () => {
+      const sut = new SearchResult({
+        items: [],
+        total: 0,
+        currentPage: 1,
+        perPage: 15,
+      });
+
+      expect(sut.toJSON()).toStrictEqual({
+        items: [],
+        total: 0,
+        currentPage: 1,
+        perPage: 15,
+        lastPage: 0,
+        sort: null,
+        sortDir: null,
+        filter: null,
+      });
+    });
+
+    it.each<LastPageTestCase>([
+      { total: 0, perPage: 15, expected: 0 },
+      { total: 4, perPage: 2, expected: 2 },
+      { total: 5, perPage: 2, expected: 3 },
+      { total: 15, perPage: 15, expected: 1 },
+    ])('lastPage: total=$total perPage=$perPage → $expected', ({ total, perPage, expected }) => {
+      const sut = new SearchResult({
+        items: [],
+        total,
+        currentPage: 1,
+        perPage,
+      });
+
+      expect(sut.toJSON().lastPage).toBe(expected);
+    });
+
+    it('should serialize entities when forceEntity is true', () => {
+      const entity = new StubEntity({ name: 'john' }, 'abc');
+
+      const sut = new SearchResult({
+        items: [entity],
+        total: 1,
+        currentPage: 1,
+        perPage: 15,
+        sort: 'name',
+        sortDir: SortDirectionEnum.ASC,
+        filter: 'john',
+      });
+
+      expect(sut.toJSON(true)).toStrictEqual({
+        items: [{ id: 'abc', name: 'john' }],
+        total: 1,
+        currentPage: 1,
+        perPage: 15,
+        lastPage: 1,
+        sort: 'name',
+        sortDir: SortDirectionEnum.ASC,
+        filter: 'john',
+      });
     });
   });
 });

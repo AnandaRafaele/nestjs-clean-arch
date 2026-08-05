@@ -19,9 +19,9 @@ export type SearchResultProps<E extends Entity, Filter> = {
   total: number;
   currentPage: number;
   perPage: number;
-  sort?: string;
-  sortDir?: SortDirectionEnum;
-  filter?: Filter;
+  sort?: string | null;
+  sortDir?: SortDirectionEnum | null;
+  filter?: Filter | null;
 };
 
 export class SearchParams<Filter = string> {
@@ -115,9 +115,9 @@ export class SearchResult<E extends Entity, Filter> {
   readonly _currentPage: number;
   readonly _perPage: number;
   readonly _lastPage: number;
-  readonly _sort?: string;
-  readonly _sortDir?: SortDirectionEnum;
-  readonly _filter?: Filter;
+  readonly _sort: string | null;
+  readonly _sortDir: SortDirectionEnum | null;
+  readonly _filter: Filter | null;
 
   constructor(props: SearchResultProps<E, Filter>) {
     this._items = props.items;
@@ -125,9 +125,9 @@ export class SearchResult<E extends Entity, Filter> {
     this._currentPage = props.currentPage;
     this._perPage = props.perPage;
     this._lastPage = Math.ceil(props.total / props.perPage);
-    this._sort = props.sort;
-    this._sortDir = props.sortDir;
-    this._filter = props.filter;
+    this._sort = props.sort ?? null;
+    this._sortDir = props.sortDir ?? null;
+    this._filter = props.filter ?? null;
   }
 
   toJSON(forceEntity = false) {
