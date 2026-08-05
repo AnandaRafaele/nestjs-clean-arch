@@ -16,7 +16,7 @@ export type SearchProps<Filter = string> = {
 
 export class SearchParams<Filter = string> {
   protected _page: number;
-  protected _perPage: number;
+  protected _perPage = 15;
   protected _sort: string | null;
   protected _sortDir: SortDirectionEnum | null;
   protected _filter: Filter | null;
@@ -34,7 +34,7 @@ export class SearchParams<Filter = string> {
   }
 
   private set page(value: number) {
-    this._page = this.validateNumber(Number(value), 1);
+    this._page = this.validateNumber(value, 1);
   }
 
   get perPage(): number {
@@ -42,7 +42,7 @@ export class SearchParams<Filter = string> {
   }
 
   private set perPage(value: number) {
-    this._perPage = this.validateNumber(Number(value), this._perPage);
+    this._perPage = this.validateNumber(value, this._perPage);
   }
 
   get sort(): string | null {
@@ -82,11 +82,17 @@ export class SearchParams<Filter = string> {
     return value === null || value === undefined || value === '';
   }
 
-  private validateNumber(value: number, fallback: number): number {
-    if (Number.isNaN(value) || value <= 0 || parseInt(String(value), 10) !== value) {
+  private validateNumber(value: unknown, fallback: number): number {
+    if (typeof value === 'boolean') {
       return fallback;
     }
-    return value;
+
+    const parsed = Number(value);
+    if (Number.isNaN(parsed) || parsed <= 0 || !Number.isInteger(parsed)) {
+      return fallback;
+    }
+
+    return parsed;
   }
 }
 
