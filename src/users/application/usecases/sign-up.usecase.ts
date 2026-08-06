@@ -1,8 +1,8 @@
+import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { HashProviderInterface } from '@/shared/application/providers/hash-provider';
+import { UseCase } from '@/shared/application/usecases/use-case';
 import { UserEntity } from '@/users/domain/entities/user.entity';
 import { UserRepositoryInterface } from '@/users/domain/repositories/user-repository';
-import { BadRequestError } from '@/users/errors/bad-request-error';
-import { UseCase } from '../../../shared/application/usecases/use-case';
 import { UserOutput } from '../dtos/user-output';
 
 export type SignUpInput = {

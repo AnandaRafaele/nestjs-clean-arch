@@ -110,36 +110,36 @@ export class SearchParams<Filter = string> {
 }
 
 export class SearchResult<E extends Entity, Filter = string> {
-  readonly _items: E[];
-  readonly _total: number;
-  readonly _currentPage: number;
-  readonly _perPage: number;
-  readonly _lastPage: number;
-  readonly _sort: string | null;
-  readonly _sortDir: SortDirectionEnum | null;
-  readonly _filter: Filter | null;
+  readonly items: E[];
+  readonly total: number;
+  readonly currentPage: number;
+  readonly perPage: number;
+  readonly lastPage: number;
+  readonly sort: string | null;
+  readonly sortDir: SortDirectionEnum | null;
+  readonly filter: Filter | null;
 
   constructor(props: SearchResultProps<E, Filter>) {
-    this._items = props.items;
-    this._total = props.total;
-    this._currentPage = props.currentPage;
-    this._perPage = props.perPage;
-    this._lastPage = Math.ceil(props.total / props.perPage);
-    this._sort = props.sort ?? null;
-    this._sortDir = props.sortDir ?? null;
-    this._filter = props.filter ?? null;
+    this.items = props.items;
+    this.total = props.total;
+    this.currentPage = props.currentPage;
+    this.perPage = props.perPage;
+    this.lastPage = Math.ceil(props.total / props.perPage);
+    this.sort = props.sort ?? null;
+    this.sortDir = props.sortDir ?? null;
+    this.filter = props.filter ?? null;
   }
 
   toJSON(forceEntity = false) {
     return {
-      items: forceEntity ? this._items.map(item => item.toJSON()) : this._items,
-      total: this._total,
-      currentPage: this._currentPage,
-      perPage: this._perPage,
-      lastPage: this._lastPage,
-      sort: this._sort,
-      sortDir: this._sortDir,
-      filter: this._filter,
+      items: forceEntity ? this.items.map(item => item.toJSON()) : this.items,
+      total: this.total,
+      currentPage: this.currentPage,
+      perPage: this.perPage,
+      lastPage: this.lastPage,
+      sort: this.sort,
+      sortDir: this.sortDir,
+      filter: this.filter,
     };
   }
 }

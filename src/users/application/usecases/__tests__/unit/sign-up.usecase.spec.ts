@@ -1,8 +1,8 @@
+import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { HashProviderInterface } from '@/shared/application/providers/hash-provider';
 import { ConflictError } from '@/shared/domain/errors/conflict-error';
 import { UserEntity } from '@/users/domain/entities/user.entity';
 import { userDataBuilder } from '@/users/domain/testing/helpers/user-data-builder';
-import { BadRequestError } from '@/users/errors/bad-request-error';
 import { UserInMemoryRepository } from '@/users/infrastructure/database/in-memory/repositories/user-in-memory.repository';
 import { SignUpUseCase } from '../../sign-up.usecase';
 
