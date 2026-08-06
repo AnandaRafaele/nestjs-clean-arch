@@ -1,6 +1,7 @@
 import { ConflictError } from '@/shared/domain/errors/conflict-error';
 import { NotFoundError } from '@/shared/domain/errors/not-found-error';
 import { InMemorySearchableRepository } from '@/shared/domain/repositories/in-memory-searchable.repository';
+import { SortDirectionEnum } from '@/shared/domain/repositories/seachable-repository-contracts';
 import { UserEntity } from '@/users/domain/entities/user.entity';
 import { UserRepositoryInterface } from '@/users/domain/repositories/user-repository';
 
@@ -34,6 +35,16 @@ export class UserInMemoryRepository
     return Promise.resolve(
       items.filter(item => item.props.name.toLowerCase().includes(filter.toLowerCase())),
     );
+  }
+
+  protected applySort(
+    items: UserEntity[],
+    sort: string | null,
+    sortDir: SortDirectionEnum | null,
+  ): Promise<UserEntity[]> {
+    return !sort
+      ? super.applySort(items, 'createdAt', SortDirectionEnum.DESC)
+      : super.applySort(items, sort, sortDir);
   }
 
   protected _findUserByEmail(email: string): UserEntity | undefined {
