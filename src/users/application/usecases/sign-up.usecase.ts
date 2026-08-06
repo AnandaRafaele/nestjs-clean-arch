@@ -2,6 +2,7 @@ import { HashProviderInterface } from '@/shared/application/providers/hash-provi
 import { UserEntity } from '@/users/domain/entities/user.entity';
 import { UserRepositoryInterface } from '@/users/domain/repositories/user-repository';
 import { BadRequestError } from '@/users/errors/bad-request-error';
+import { UseCase } from '../../../shared/application/usecases/use-case';
 import { UserOutput } from '../dtos/user-output';
 
 export type SignUpInput = {
@@ -10,7 +11,7 @@ export type SignUpInput = {
   password: string;
 };
 
-export class SignUpUseCase {
+export class SignUpUseCase implements UseCase<SignUpInput, UserOutput> {
   constructor(
     private readonly userRepository: UserRepositoryInterface,
     private readonly hashProvider: HashProviderInterface,
