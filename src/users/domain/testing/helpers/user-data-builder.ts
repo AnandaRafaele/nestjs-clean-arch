@@ -1,9 +1,7 @@
-import { faker } from '@faker-js/faker';
 import { UserEntityProps } from '@/users/domain/entities/user.entity';
+import { faker } from '@faker-js/faker';
 
-export const userDataBuilder = (
-  props: Partial<UserEntityProps> = {},
-): UserEntityProps => {
+export const userDataBuilder = (props: Partial<UserEntityProps> = {}): UserEntityProps => {
   return {
     name: props.name ?? faker.person.fullName({ sex: 'female' }),
     email: props.email ?? faker.internet.email({ firstName: 'Jane' }),

@@ -8,12 +8,12 @@ export class UserInMemoryRepository
   extends InMemorySearchableRepository<UserEntity>
   implements UserRepositoryInterface
 {
+  sortableFields: string[] = ['name', 'email', 'createdAt'];
+
   findByEmail(email: string): Promise<UserEntity> {
     const user = this._findUserByEmail(email);
     if (!user) {
-      return Promise.reject(
-        new NotFoundError(`User with email ${email} not found`),
-      );
+      return Promise.reject(new NotFoundError(`User with email ${email} not found`));
     }
     return Promise.resolve(user);
   }
@@ -24,6 +24,16 @@ export class UserInMemoryRepository
       return Promise.reject(new ConflictError('User email already exists'));
     }
     return Promise.resolve();
+  }
+
+  protected applyFilter(items: UserEntity[], filter: string | null): Promise<UserEntity[]> {
+    if (!filter) {
+      return Promise.resolve(items);
+    }
+
+    return Promise.resolve(
+      items.filter(item => item.props.name.toLowerCase().includes(filter.toLowerCase())),
+    );
   }
 
   protected _findUserByEmail(email: string): UserEntity | undefined {

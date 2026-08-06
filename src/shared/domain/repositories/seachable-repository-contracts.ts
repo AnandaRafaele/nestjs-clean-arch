@@ -84,8 +84,8 @@ export class SearchParams<Filter = string> {
     return this._filter;
   }
 
-  private set filter(value: Filter | null | undefined) {
-    this._filter = this.isEmpty(value) ? null : (value as Filter);
+  private set filter(value: Filter | null) {
+    this._filter = this.isEmpty(value) ? null : value;
   }
 
   private isEmpty(value: unknown): boolean {
@@ -147,7 +147,7 @@ export class SearchResult<E extends Entity, Filter = string> {
 export interface SeachableRepositoryInterface<
   E extends Entity,
   Filter = string,
-  SearchInput = SearchParams,
+  SearchInput = SearchParams<Filter>,
   SearchOutput = SearchResult<E, Filter>,
 > extends RepositoryInterface<E> {
   sortableFields: string[];
