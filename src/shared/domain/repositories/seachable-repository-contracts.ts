@@ -36,7 +36,7 @@ export class SearchParams<Filter = string> {
     this.perPage = props.perPage ?? 15;
     this.sort = props.sort ?? null;
     this.sortDir = props.sortDir ?? null;
-    this.filter = props.filter;
+    this.filter = props.filter ?? null;
   }
 
   get page(): number {
@@ -109,7 +109,7 @@ export class SearchParams<Filter = string> {
   }
 }
 
-export class SearchResult<E extends Entity, Filter> {
+export class SearchResult<E extends Entity, Filter = string> {
   readonly _items: E[];
   readonly _total: number;
   readonly _currentPage: number;
@@ -150,5 +150,6 @@ export interface SeachableRepositoryInterface<
   SearchInput = SearchParams,
   SearchOutput = SearchResult<E, Filter>,
 > extends RepositoryInterface<E> {
+  sortableFields: string[];
   search(props: SearchInput): Promise<SearchOutput>;
 }
