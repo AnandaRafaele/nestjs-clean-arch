@@ -1,5 +1,5 @@
 import { UserRepositoryInterface } from '@/users/domain/repositories/user-repository';
-import { UserOutput } from './dtos/user-output';
+import { UserOutput } from '../dtos/user-output';
 
 export type GetUserInput = {
   id: string;
