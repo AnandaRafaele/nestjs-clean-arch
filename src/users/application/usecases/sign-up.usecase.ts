@@ -1,6 +1,7 @@
+import { HashProviderInterface } from '@/shared/application/providers/hash-provider';
 import { UserEntity } from '@/users/domain/entities/user.entity';
 import { UserRepositoryInterface } from '@/users/domain/repositories/user-repository';
-import { BadRequestError } from '../../errors/bad-request-error';
+import { BadRequestError } from '@/users/errors/bad-request-error';
 
 export type SignUpInput = {
   name: string;
@@ -16,7 +17,10 @@ export type SignUpOutput = {
 };
 
 export class SignUpUseCase {
-  constructor(private readonly userRepository: UserRepositoryInterface) {}
+  constructor(
+    private readonly userRepository: UserRepositoryInterface,
+    private readonly hashProvider: HashProviderInterface,
+  ) {}
 
   async execute(input: SignUpInput): Promise<SignUpOutput> {
     const { name, email, password } = input;
@@ -25,9 +29,13 @@ export class SignUpUseCase {
       throw new BadRequestError('Input data not provided');
     }
 
-    await this.userRepository.emailExists(input.email);
+    await this.userRepository.emailExists(email);
 
-    const entity = new UserEntity(input);
+    const hashedPassword = await this.hashProvider.generateHash(password);
+    const entity = new UserEntity({
+      ...input,
+      password: hashedPassword,
+    });
 
     await this.userRepository.insert(entity);
 

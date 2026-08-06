@@ -1,8 +1,5 @@
 import { EntityValidationError } from '@/shared/domain/errors/validation-error';
-import {
-  UserEntity,
-  UserEntityProps,
-} from '@/users/domain/entities/user.entity';
+import { UserEntity, UserEntityProps } from '@/users/domain/entities/user.entity';
 import { userDataBuilder } from '@/users/domain/testing/helpers/user-data-builder';
 
 describe('UserEntity integration tests', () => {
@@ -98,12 +95,8 @@ describe('UserEntity integration tests', () => {
       const entity = new UserEntity(userDataBuilder());
 
       expect(() => entity.updateName('')).toThrow(EntityValidationError);
-      expect(() => entity.updateName('a'.repeat(256))).toThrow(
-        EntityValidationError,
-      );
-      expect(() => entity.updateName(10 as unknown as string)).toThrow(
-        EntityValidationError,
-      );
+      expect(() => entity.updateName('a'.repeat(256))).toThrow(EntityValidationError);
+      expect(() => entity.updateName(10 as unknown as string)).toThrow(EntityValidationError);
     });
 
     it('should update a valid name', () => {
@@ -116,15 +109,9 @@ describe('UserEntity integration tests', () => {
       const entity = new UserEntity(userDataBuilder());
 
       expect(() => entity.updatePassword('')).toThrow(EntityValidationError);
-      expect(() => entity.updatePassword('a'.repeat(7))).toThrow(
-        EntityValidationError,
-      );
-      expect(() => entity.updatePassword('a'.repeat(101))).toThrow(
-        EntityValidationError,
-      );
-      expect(() => entity.updatePassword(10 as unknown as string)).toThrow(
-        EntityValidationError,
-      );
+      expect(() => entity.updatePassword('a'.repeat(7))).toThrow(EntityValidationError);
+      expect(() => entity.updatePassword('a'.repeat(101))).toThrow(EntityValidationError);
+      expect(() => entity.updatePassword(10 as unknown as string)).toThrow(EntityValidationError);
     });
 
     it('should update a valid password', () => {
