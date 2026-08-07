@@ -18,10 +18,7 @@ describe('ClassValidatorFields unit tests', () => {
   });
 
   it('should validate with errors', () => {
-    const spyValidateSync = jest.spyOn(
-      libClassValidator,
-      'validateSync',
-    ) as unknown as jest.Mock;
+    const spyValidateSync = jest.spyOn(libClassValidator, 'validateSync') as unknown as jest.Mock;
     spyValidateSync.mockReturnValue([
       {
         property: 'field',
@@ -42,10 +39,7 @@ describe('ClassValidatorFields unit tests', () => {
   });
 
   it('should validate without errors', () => {
-    const spyValidateSync = jest.spyOn(
-      libClassValidator,
-      'validateSync',
-    ) as unknown as jest.Mock;
+    const spyValidateSync = jest.spyOn(libClassValidator, 'validateSync') as unknown as jest.Mock;
     spyValidateSync.mockReturnValue([]);
 
     const sut = new StubClassValidatorFields();
